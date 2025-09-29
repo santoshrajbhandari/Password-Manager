@@ -3,15 +3,15 @@ SecureVault is a secure, multi-user password manager built with Django. It uses 
 
 ## Key Features
 - **Secure Credential**: Storage Passwords are encrypted using Fernet symmetric encryption with per-user keys.
--**Per-User Encryption Keys**: Each user has a unique key stored securely, isolating their data from others.
+- **Per-User Encryption Keys**: Each user has a unique key stored securely, isolating their data from others.
 
--**Gmail OAuth2 Login**: Authenticate using Google accounts for seamless access.
+- **Gmail OAuth2 Login**: Authenticate using Google accounts for seamless access.
 
--**Session Management**: Includes session expiration logic for added security.
+- **Session Management**: Includes session expiration logic for added security.
 
--**Admin Registration**: Backend access for managing users.
+- **Admin Registration**: Backend access for managing users.
 
--**Responsive UI**: Modal dialogs for editing/deleting credentials, confirmation prompts, and mobile-friendly design.
+- **Responsive UI**: Modal dialogs for editing/deleting credentials, confirmation prompts, and mobile-friendly design.
 
 ## Installation
 ### Clone the repo
