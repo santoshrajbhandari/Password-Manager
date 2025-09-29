@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard – SecureVault</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+  <!-- Header -->
+  <header class="bg-white shadow">
+    <div class="max-w-7xl mx-auto px-4 py-6 flex justify-between items-center">
+      <h1 class="text-2xl font-bold text-blue-600">SecureVault Dashboard</h1>
+      <!-- Logout Button -->
+<button onclick="toggleModal()" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+  Logout
+</button>
+
+<!-- Modal -->
+<div id="logoutModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+  <div class="bg-white rounded-lg shadow-lg p-6 max-w-sm w-full text-center">
+    <h2 class="text-xl font-semibold mb-4 text-gray-800">Confirm Logout</h2>
+    <p class="mb-6 text-gray-600">Are you sure you want to log out?</p>
+    <form action="{% url 'logout' %}" method="POST">
+      {% csrf_token %}
+      <div class="flex justify-center gap-4">
+        <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Yes</button>
+        <button type="button" onclick="toggleModal()" class="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+<script>
+  function toggleModal() {
+    const modal = document.getElementById('logoutModal');
+    modal.classList.toggle('hidden');
+  }
+</script>
+
+    </div>
+  </header>
+
+  <!-- Add New Credential -->
+  <section class="max-w-3xl mx-auto px-4 py-8">
+    <h2 class="text-xl font-semibold mb-4">Add New Credential</h2>
+    <form method="POST" class="grid grid-cols-1 gap-4 bg-white p-6 rounded shadow">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="add" />
+      <input type="text" name="app_name" placeholder="Account Name (e.g. Gmail)" required class="px-4 py-2 border rounded focus:ring-2 focus:ring-blue-500" />
+      <input type="text" name="app_username" placeholder="Username or Email" required class="px-4 py-2 border rounded focus:ring-2 focus:ring-blue-500" />
+      <input type="password" name="app_password" placeholder="Password" required class="px-4 py-2 border rounded focus:ring-2 focus:ring-blue-500" />
+      <button type="submit" class="bg-blue-600 text-white py-2 rounded hover:bg-blue-700">Save Credential</button>
+    </form>
+  </section>
+
+  <!-- Saved Credentials Table -->
+  <section class="max-w-5xl mx-auto px-4 py-8">
+    <h2 class="text-xl font-semibold mb-4">Your Saved Credentials</h2>
+    <div class="overflow-x-auto bg-white rounded shadow">
+      <table class="min-w-full table-auto">
+        <thead class="bg-blue-100 text-blue-800">
+          <tr>
+            <th class="px-4 py-2 text-left">Account</th>
+            <th class="px-4 py-2 text-left">Username</th>
+            <th class="px-4 py-2 text-left">Password</th>
+            <th class="px-4 py-2 text-left">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for credential in credentials %}
+          <tr class="border-t">
+            <td class="px-4 py-2">{{ credential.app_name }}</td>
+            <td class="px-4 py-2">{{ credential.app_username }}</td>
+            <td class="px-4 py-2">
+  <div class="flex items-center gap-2">
+    
+    <span id="pw-{{ forloop.counter }}" data-password="{{ credential.decrypted_password }}" class="font-mono">••••••••</span>
+    <button type="button" onclick="togglePassword('{{ forloop.counter }}')" class="text-blue-600 hover:underline text-sm">
+      Show
+    </button>
+  </div>
+</td>
+
+            <td class="px-4 py-2 space-x-2">
+                <button onclick="openEditModal({{ credential.id }}, '{{ credential.app_name }}', '{{ credential.app_username }}', '{{ credential.decrypted_password }}')" 
+                    class="text-blue-600 hover:underline">Edit
+                </button>
+              <button onclick="openDeleteModal({{ credential.id }}, '{{ credential.app_name }}')" 
+                class="text-red-600 hover:underline">Delete
+                </button>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="4" class="px-4 py-4 text-center text-gray-500">No credentials saved yet.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+{% comment %} This is for the edit button {% endcomment %}
+
+<div id="editModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+  <div class="bg-white p-6 rounded shadow-lg w-full max-w-md">
+    <h2 class="text-xl font-semibold mb-4">Edit Credential</h2>
+    <form id="editForm" method="POST">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="edit" />
+      <input type="hidden" name="credential_id" id="editCredentialId" />
+      <input type="text" name="app_name" id="editAppName" class="w-full mb-3 px-4 py-2 border rounded" />
+      <input type="text" name="app_username" id="editAppUsername" class="w-full mb-3 px-4 py-2 border rounded" />
+      <input type="password" name="app_password" id="editAppPassword" class="w-full mb-3 px-4 py-2 border rounded" />
+      <div class="flex justify-end space-x-2">
+        <button type="button" onclick="closeEditModal()" class="px-4 py-2 bg-gray-300 rounded">Cancel</button>
+        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded">Save</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+<script>
+function openEditModal(id, name, username, password) {
+  document.getElementById('editCredentialId').value = id;
+  document.getElementById('editAppName').value = name;
+  document.getElementById('editAppUsername').value = username;
+  document.getElementById('editAppPassword').value = password;
+  document.getElementById('editModal').classList.remove('hidden');
+}
+
+function closeEditModal() {
+  document.getElementById('editModal').classList.add('hidden');
+}
+</script>
+{% comment %} This is for the delete button {% endcomment %}
+
+<div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+  <div class="bg-white p-6 rounded shadow-lg w-full max-w-md">
+    <h2 class="text-xl font-semibold mb-4">Confirm Delete</h2>
+    <p id="deleteMessage" class="mb-4 text-gray-700"></p>
+    <form method="POST">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="delete" />
+      <input type="hidden" name="credential_id" id="deleteCredentialId" />
+      <div class="flex justify-end space-x-2">
+        <button type="button" onclick="closeDeleteModal()" class="px-4 py-2 bg-gray-300 rounded">Cancel</button>
+        <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded">Delete</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+<script>
+function openDeleteModal(id, appName) {
+  document.getElementById('deleteCredentialId').value = id;
+  document.getElementById('deleteMessage').innerText = `Are you sure you want to delete "${appName}"?`;
+  document.getElementById('deleteModal').classList.remove('hidden');
+}
+
+function closeDeleteModal() {
+  document.getElementById('deleteModal').classList.add('hidden');
+}
+</script>
+
+<script>
+  function togglePassword(id) {
+    const span = document.getElementById('pw-' + id);
+    const button = event.target;
+    const actualPassword = span.getAttribute('data-password');
+
+    if (span.textContent === '••••••••') {
+      span.textContent = actualPassword;
+      button.textContent = 'Hide';
+    } else {
+      span.textContent = '••••••••';
+      button.textContent = 'Show';
+    }
+  }
+</script>
+
+
+      </table>
+    </div>
+  </section>
+
+</body>
+</html>

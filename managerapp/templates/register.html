@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign Up – SecureVault</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center min-h-screen">
+
+  <div class="bg-white shadow-xl rounded-lg p-8 w-full max-w-md">
+    <h2 class="text-3xl font-bold text-center text-blue-600 mb-6">Create Your SecureVault Account</h2>
+
+    <!-- Google OAuth2 Signup -->
+    <a href="/signup/google" class="flex items-center justify-center bg-blue-600 text-white py-3 rounded hover:bg-blue-700 transition mb-6">
+      <svg class="w-5 h-5 mr-2" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.4h-1.9v-.1H24v7.3h11.3c-1.6 4.4-5.8 7.5-11.3 7.5-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.4-5.4C35.3 5.1 30 3 24 3 12.9 3 3.9 12 3.9 23S12.9 43 24 43c11.1 0 20.1-9 20.1-20.1 0-1.5-.2-2.9-.5-4.3z"/><path fill="#FF3D00" d="M6.3 14.7l6 4.4C13.7 15.1 18.5 12 24 12c3.1 0 5.9 1.2 8 3.1l5.4-5.4C35.3 5.1 30 3 24 3 15.6 3 8.3 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 43c6 0 11.3-2.3 15.3-6l-7.1-5.8c-2.1 1.4-4.7 2.2-7.5 2.2-5.5 0-9.7-3.1-11.3-7.5l-6 4.6C8.3 37.7 15.6 43 24 43z"/><path fill="#1976D2" d="M43.6 20.4h-1.9v-.1H24v7.3h11.3c-.9 2.5-2.6 4.6-4.8 6.1l7.1 5.8c2.1-1.9 3.9-4.3 5-7.1 1-2.5 1.6-5.2 1.6-8.1 0-1.5-.2-2.9-.5-4.3z"/></svg>
+      Sign Up with Google
+    </a>
+
+    <!-- Divider -->
+    <div class="flex items-center mb-6">
+      <hr class="flex-grow border-gray-300" />
+      <span class="mx-4 text-gray-500">or</span>
+      <hr class="flex-grow border-gray-300" />
+    </div>
+
+    <!-- Email Signup Form -->
+    <form action="{% url 'register' %}" method="POST" class="space-y-4">
+        {% csrf_token %}
+      <input type="email" name="email" placeholder="Email Address" required class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      <input type="password" name="password" placeholder="Create Password" required class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition">Create Account</button>
+    </form>
+
+    <!-- Footer Links -->
+    <div class="mt-4 text-center text-sm text-gray-600">
+      Already have an account? <a href="/login" class="text-blue-600 hover:underline">Log in</a>
+    </div>
+  </div>
+
+</body>
+</html>
+
