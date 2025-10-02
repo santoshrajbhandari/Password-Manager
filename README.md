@@ -113,9 +113,15 @@ def set_password(self, raw_password):
 ```
 ## Demo
 
+Landing page
 ![Landing page](assets/demo1.png)
+Sign up Page
 ![Sign up Page](assets/demo2.png)
+Login Page
 ![Login Page](assets/demo3.png)
+User Dashboard
 ![User Dashboard](assets/demo4.png)
+Encrpyted Credential
 ![Encrpyted Credential](assets/demo5.png)
+Encrpyted Master Password
 ![Encrpyted Master Password](assets/demo6.png)
