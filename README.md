@@ -111,3 +111,11 @@ def set_password(self, raw_password):
     self.app_password_encrypted = f.encrypt(raw_password.encode()).decode()
 
 ```
+## Demo
+
+![Landing page](assets/demo1.png)
+![Sign up Page](assets/demo2.png)
+![Login Page](assets/demo3.png)
+![User Dashboard](assets/demo4.png)
+![Encrpyted Credential](assets/demo5.png)
+![Encrpyted Master Password](assets/demo6.png)
